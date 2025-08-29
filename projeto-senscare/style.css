@@ -1,0 +1,164 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e0e7ff 0%, #f0f0f0 100%);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#form,
+#cadastro-section,
+#login-section {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    padding: 32px 28px 24px 28px;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(60, 60, 120, 0.15);
+    margin: 24px 0;
+}
+
+h1, h3 {
+    color: #3b4cca;
+    margin-bottom: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.div-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+label {
+    margin-bottom: 6px;
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #bfc6d1;
+    border-radius: 7px;
+    font-size: 1rem;
+    background: #f8fafc;
+    transition: border 0.2s;
+    margin-bottom: 2px;
+    box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+    border-color: #3b4cca;
+    outline: none;
+    background: #eef2ff;
+}
+
+select {
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    padding: 12px 0;
+    background: linear-gradient(90deg, #3b4cca 60%, #5f7cff 100%);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(60, 60, 120, 0.08);
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #5f7cff 40%, #3b4cca 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+
+#resposta,
+#resposta-login {
+    min-height: 22px;
+    margin: 8px 0 0 0;
+    color: #d32f2f;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+#info-enviada {
+    background: #f8fafc;
+    border: 1px solid #bfc6d1;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-top: 24px;
+    color: #222;
+    font-size: 1rem;
+    max-width: 420px;
+    box-shadow: 0 2px 8px rgba(60, 60, 120, 0.07);
+}
+
+#responsavel-section {
+    background: #eef2ff;
+    border: 1px solid #bfc6d1;
+    border-radius: 8px;
+    padding: 12px 14px 6px 14px;
+    margin-bottom: 18px;
+}
+
+a {
+    color: #3b4cca;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #1a237e;
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    #form,
+    #cadastro-section,
+    #login-section,
+    #info-enviada {
+        max-width: 98vw;
+        padding: 16px 4vw 12px 4vw;
+    }
+    body {
+        padding: 0;
+    }
+}
+@media (max-width: 400px) {
+    h1, h3 {
+        font-size: 1.2rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    button {
+        font-size: 0.95rem;
+        padding: 8px 10px;
+    }
+}

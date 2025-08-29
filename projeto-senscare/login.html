@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Cadastro e Login</title>
+</head>
+<body>
+  <div id="form">
+
+    <h1>Cadastre-se</h1>
+
+    <div id="cadastro-section">
+      <div class="div-main">
+        <label for="nome">Nome</label>
+        <input id="nome" type="text">
+      </div>
+      <div class="div-main">
+        <label for="email">E-mail</label>
+        <input id="email" type="email">
+      </div>
+      <div class="div-main">
+        <label for="cpf">CPF</label>
+        <input id="cpf" type="text">
+      </div>
+      <div class="div-main">
+        <label for="senha">Senha</label>
+        <input id="senha" type="password">
+      </div>
+      <div class="div-main">
+        <label for="senha-repetida">Repita a senha</label>
+        <input id="senha-repetida" type="password">
+      </div>
+      <button onclick="enviaFormulario()">Cadastrar</button>
+      <p id="resposta"></p>
+      <button onclick="mostrarLogin()">Ir para Login</button>
+    </div>
+
+    <div id="login-section" style="display: none;">
+      <h1>Login</h1>
+      <div class="div-main">
+        <label for="login-email">E-mail</label>
+        <input id="login-email" type="email">
+      </div>
+      <div class="div-main">
+        <label for="login-senha">Senha</label>
+        <input id="login-senha" type="password">
+      </div>
+      <button onclick="fazerLogin()">Entrar</button>
+      <p id="resposta-login"></p>
+      <button onclick="mostrarCadastro()">Voltar ao Cadastro</button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
