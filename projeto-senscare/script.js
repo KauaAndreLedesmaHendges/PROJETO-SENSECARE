@@ -3,8 +3,6 @@ function enviaFormulario() {
   const dataNascimento = document.getElementById("data-nascimento") ? document.getElementById("data-nascimento").value : ""
   const email = document.getElementById("email").value
   const cpf = document.getElementById("cpf").value
-  const senha = document.getElementById("senha").value
-  const senharepetida = document.getElementById("senha-repetida").value
   const tipoDeficiencia = document.getElementById("deficiencia").value
   const resultado = document.getElementById("resposta")
 
@@ -25,6 +23,7 @@ function enviaFormulario() {
       !emailResp.includes('@') ||
       !emailResp.includes('.com')
     ) {
+      resultado.style.color = "#d32f2f"
       resultado.innerHTML = "Preencha corretamente os dados do responsável!"
       return;
     }
@@ -36,30 +35,24 @@ function enviaFormulario() {
     };
   }
 
-  
   if (nome === "") {
+    resultado.style.color = "#d32f2f"
     resultado.innerHTML = "Nome incorreto"
   } else if (!dataNascimento) {
+    resultado.style.color = "#d32f2f"
     resultado.innerHTML = "Data de nascimento obrigatória"
   } else if (!email.includes('@') || !email.includes(".com")) {
+    resultado.style.color = "#d32f2f"
     resultado.innerHTML = "Email inválido"
   } else if (cpf.length !== 11) {
+    resultado.style.color = "#d32f2f"
     resultado.innerHTML = "CPF deve ter 11 dígitos"
-  } else if (senha === "") {
-    resultado.innerHTML = "Senha não pode ser vazia"
-  } else if (senha !== senharepetida) {
-    resultado.innerHTML = "As senhas não coincidem"
-  } else if (!/[a-z]/.test(senha)) {
-    resultado.innerHTML = "A senha deve conter pelo menos uma letra minúscula"
-  } else if (!/[A-Z]/.test(senha)) {
-    resultado.innerHTML = "A senha deve conter pelo menos uma letra maiúscula"
-  } else if (!/[^A-Za-z0-9]/.test(senha)) {
-    resultado.innerHTML = "A senha deve conter pelo menos um caractere especial"
   } else {
-    const novoUsuario = { nome, dataNascimento, email, cpf, senha, responsavel, tipoDeficiencia }
+    const novoUsuario = { nome, dataNascimento, email, cpf, responsavel, tipoDeficiencia }
     const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
     usuariosSalvos.push(novoUsuario)
     localStorage.setItem("usuarios", JSON.stringify(usuariosSalvos))
+    resultado.style.color = "#2e7d32" 
     resultado.innerHTML = "Cadastro efetuado com sucesso!"
     mostrarInfoEnviada(novoUsuario)
   }
@@ -87,20 +80,20 @@ function mostrarInfoEnviada(usuario) {
 
 function fazerLogin() {
   const email = document.getElementById("login-email").value
-  const senha = document.getElementById("login-senha").value
   const resposta = document.getElementById("resposta-login")
-
   const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
 
   const usuarioEncontrado = usuariosSalvos.find(
-    user => user.email === email && user.senha === senha
+    user => user.email === email
   );
 
   if (usuarioEncontrado) {
+    resposta.style.color = "#2e7d32"
     resposta.innerHTML = "✅ Login efetuado com sucesso!"
     console.log("Usuário logado:", usuarioEncontrado)
   } else {
-    resposta.innerHTML = "❌ E-mail ou senha inválidos."
+    resposta.style.color = "#d32f2f"
+    resposta.innerHTML = "❌ E-mail não encontrado."
   }
 }
 
@@ -130,14 +123,17 @@ function verificarIdade() {
   const dataNascimento = document.getElementById("data-nascimento").value
   const respostaIdade = document.getElementById("resposta-idade")
   const responsavelSection = document.getElementById("responsavel-section")
+  const idade = calcularIdade(dataNascimento)
+
+  document.querySelectorAll('.div-main input, .div-main select').forEach(el => {
+    el.style.background = ""
+  })
 
   if (!dataNascimento) {
     respostaIdade.innerHTML = ""
     responsavelSection.style.display = "none"
     return;
   }
-
-  const idade = calcularIdade(dataNascimento)
 
   respostaIdade.innerHTML = `Você tem ${idade} anos.`
   if (idade < 18) {
@@ -146,6 +142,11 @@ function verificarIdade() {
   } else {
     respostaIdade.innerHTML += " Você é maior de idade."
     responsavelSection.style.display = "none"
+  }
+  if (idade >= 60) {
+    document.querySelectorAll('.div-main input, .div-main select').forEach(el => {
+      el.style.background = "#fff9c4"
+    })
   }
 }
 
@@ -168,3 +169,4 @@ function enviarFormularioDeficiencia() {
     mostrarInfoEnviada(novoUsuario)
   }
 }
+  
