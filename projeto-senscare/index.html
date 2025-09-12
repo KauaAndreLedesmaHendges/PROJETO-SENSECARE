@@ -8,6 +8,7 @@
 </head>
 <body>
   <img id="logo-sensecare" src="logo-sensecare.png" alt="SenseCare Logo" />
+
   <div id="cadastro-section">
     <h1>Cadastre-se</h1>
     <div class="div-main">
@@ -15,9 +16,43 @@
       <input id="nome" type="text" />
     </div>
     <div class="div-main">
+      <label for="sexo">Sexo</label>
+      <select id="sexo" onchange="verificarIdade()">
+        <option value="">Selecione</option>
+        <option value="feminino">Feminino</option>
+        <option value="masculino">Masculino</option>
+        <option value="outro">Outro</option>
+      </select>
+    </div>
+    <div class="div-main">
       <label for="data-nascimento">Data de nascimento</label>
       <input id="data-nascimento" type="date" onchange="verificarIdade()" />
       <div id="resposta-idade"></div>
+    </div>
+    <div id="gestante-section" style="display:none;">
+      <h3>Informações de Gestante</h3>
+      <div class="div-main">
+        <label for="gestante">É gestante?</label>
+        <select id="gestante" onchange="mostrarInfoGestante()">
+          <option value="">Selecione</option>
+          <option value="sim">Sim</option>
+          <option value="nao">Não</option>
+        </select>
+      </div>
+      <div id="info-gestante" style="display:none;">
+        <div class="div-main">
+          <label for="meses-gestacao">Meses de gestação</label>
+          <input id="meses-gestacao" type="number" min="1" max="12" />
+        </div>
+        <div class="div-main">
+          <label for="acompanhamento-medico">Está em acompanhamento médico?</label>
+          <select id="acompanhamento-medico">
+            <option value="">Selecione</option>
+            <option value="sim">Sim</option>
+            <option value="nao">Não</option>
+          </select>
+        </div>
+      </div>
     </div>
     <div id="responsavel-section" style="display:none;">
       <h3>Dados do Responsável</h3>
@@ -31,7 +66,7 @@
       </div>
       <div class="div-main">
         <label for="cpf-responsavel">CPF do responsável</label>
-        <input id="cpf-responsavel" type="text" />
+        <input id="cpf-responsavel" type="text" maxlength="11" />
       </div>
       <div class="div-main">
         <label for="email-responsavel">E-mail do responsável</label>
@@ -44,11 +79,20 @@
     </div>
     <div class="div-main">
       <label for="cpf">CPF</label>
-      <input id="cpf" type="text" />
+      <input id="cpf" type="text" maxlength="11" />
+    </div>
+    <div class="div-main">
+      <label for="senha">Senha</label>
+      <input id="senha" type="password" />
+    </div>
+    <div class="div-main">
+      <label for="senha-repetida">Repita a senha</label>
+      <input id="senha-repetida" type="password" />
     </div>
     <div class="div-main">
       <label for="deficiencia">Possui algum tipo de deficiência?</label>
-      <select id="deficiencia">
+      <select id="deficiencia" onchange="mostrarOutraDeficiencia()">
+        <option value="">Selecione</option>
         <option value="nenhuma">Nenhuma</option>
         <option value="visual">Visual</option>
         <option value="auditiva">Auditiva</option>
@@ -56,10 +100,10 @@
         <option value="intelectual">Intelectual</option>
         <option value="multipla">Múltipla</option>
         <option value="outra">Outra</option>
-        <input type="text" id="outra-deficiencia" placeholder="Especifique outra deficiência" style="display:none;" />
       </select>
+      <input type="text" id="outra-deficiencia" placeholder="Especifique outra deficiência" style="display:none;" />
     </div>
-    <button onclick="enviaFormulario()">Enviar</button>
+    <button onclick="enviaFormulario()">Cadastrar</button>
     <div id="resposta"></div>
     <p>Já tem conta? <a href="#" onclick="mostrarLogin()">Faça login</a></p>
   </div>
@@ -69,13 +113,15 @@
       <label for="login-email">E-mail</label>
       <input id="login-email" type="email" />
     </div>
+    <div class="div-main">
+      <label for="login-senha">Senha</label>
+      <input id="login-senha" type="password" />
+    </div>
     <button onclick="fazerLogin()">Entrar</button>
     <div id="resposta-login"></div>
     <p>Não tem conta? <a href="#" onclick="mostrarCadastro()">Cadastre-se</a></p>
   </div>
-
   <div id="info-enviada" style="margin-top:30px;"></div>
-
-  <script src="script.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
