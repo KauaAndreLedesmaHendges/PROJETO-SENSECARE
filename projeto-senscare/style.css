@@ -171,3 +171,8 @@ a:hover {
         padding: 8px 10px;
     }
 }
+
+
+#info-enviada {
+    transition: background 0.3s, border-color 0.3s;
+}

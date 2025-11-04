@@ -47,8 +47,6 @@ function enviaFormulario() {
   const dataNascimento = document.getElementById("data-nascimento").value
   const email = document.getElementById("email").value.trim()
   const cpf = document.getElementById("cpf").value.trim()
-  const senha = document.getElementById("senha").value
-  const senhaRepetida = document.getElementById("senha-repetida").value
   const tipoDeficiencia = document.getElementById("deficiencia").value
   const outraDeficiencia = document.getElementById("outra-deficiencia").value.trim()
   const resultado = document.getElementById("resposta")
@@ -119,12 +117,6 @@ function enviaFormulario() {
     resultado.innerHTML = "CPF deve ter 11 dígitos."
     return
   }
-  if (!senha || senha !== senhaRepetida ||
-      !/[a-z]/.test(senha) || !/[A-Z]/.test(senha) || !/[^A-Za-z0-9]/.test(senha)) {
-    resultado.style.color = "#d32f2f"
-    resultado.innerHTML = "Senha inválida (mín. 1 minúscula, 1 maiúscula, 1 caractere especial e igual à repetida)."
-    return
-  }
   let defFinal = tipoDeficiencia
   if (tipoDeficiencia === "outra") {
     if (!outraDeficiencia) {
@@ -135,7 +127,7 @@ function enviaFormulario() {
     defFinal = outraDeficiencia
   }
 
-  const novoUsuario = { nome, sexo, dataNascimento, email, cpf, senha, responsavel, tipoDeficiencia: defFinal, infoGestante }
+  const novoUsuario = { nome, sexo, dataNascimento, email, cpf, responsavel, tipoDeficiencia: defFinal, infoGestante }
   const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
   if (usuariosSalvos.some(u => u.email === email)) {
     resultado.style.color = "#d32f2f"
@@ -152,6 +144,8 @@ function enviaFormulario() {
 function mostrarInfoEnviada(usuario) {
   const infoDiv = document.getElementById("info-enviada")
   const idade = calcularIdade(usuario.dataNascimento)
+  let isGestante = usuario.infoGestante && usuario.infoGestante.gestante === true
+
   let html = `<h3>Informações enviadas:</h3>
     <ul>
       <li><b>Nome:</b> ${usuario.nome}</li>
@@ -168,7 +162,7 @@ function mostrarInfoEnviada(usuario) {
       <li><b>CPF do responsável:</b> ${usuario.responsavel.cpf}</li>
       <li><b>Email do responsável:</b> ${usuario.responsavel.email}</li>`
   }
-  if (usuario.infoGestante && usuario.infoGestante.gestante) {
+  if (isGestante) {
     html += `
       <li><b>Gestante:</b> Sim</li>
       <li><b>Meses de gestação:</b> ${usuario.infoGestante.mesesGestacao}</li>
@@ -177,30 +171,41 @@ function mostrarInfoEnviada(usuario) {
     html += `<li><b>Gestante:</b> Não</li>`
   }
   html += `</ul>`
-  infoDiv.innerHTML = html
-
-  
-  if (idade >= 60) {
-    infoDiv.style.background = "#fffde7"
-    infoDiv.style.borderColor = "#ffe082"
+ 
+  if (isGestante) {
+    infoDiv.style.background = "#fff3e0"      
+    infoDiv.style.borderColor = "#ff9900ff"    
+    html = `<div style="color:#ff9800;font-weight:bold;margin-bottom:8px;">Atenção: gestante cadastrada!</div>` + html
+  } else if (idade >= 80) {
+    infoDiv.style.background = "#ffebee"      
+    infoDiv.style.borderColor = "#d32f2f"     
+    html = `<div style="color:#d32f2f;font-weight:bold;margin-bottom:8px;">Atenção: usuário com 80 anos ou mais!</div>` + html
+  } else if (idade >= 60) {
+    infoDiv.style.background = "#fffde7"      
+    infoDiv.style.borderColor = "#ffe082"     
+    html = `<div style="color:#fbc02d;font-weight:bold;margin-bottom:8px;">Idoso: usuário com 60 anos ou mais.</div>` + html
+  } else if (idade > 0) {
+    infoDiv.style.background = "#e3f2fd"      
+    infoDiv.style.borderColor = "#3bce7c"     
   } else {
-    infoDiv.style.background = "#e3f2fd"
+    infoDiv.style.background = "#fff"         
     infoDiv.style.borderColor = "#3bce7c"
   }
+  infoDiv.innerHTML = html
 }
 
 function fazerLogin() {
   const email = document.getElementById("login-email").value.trim()
-  const senha = document.getElementById("login-senha").value
+  const cpf = document.getElementById("login-cpf").value.trim()
   const resposta = document.getElementById("resposta-login")
   const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
-  const usuarioEncontrado = usuariosSalvos.find(user => user.email === email && user.senha === senha)
+  const usuarioEncontrado = usuariosSalvos.find(user => user.email === email && user.cpf === cpf)
   if (usuarioEncontrado) {
-    resposta.style.color = "#2e7d32" 
+    resposta.style.color = "#2e7d32"
     resposta.innerHTML = `✅ Login efetuado com sucesso! Bem-vindo, ${usuarioEncontrado.nome}`
   } else {
-    resposta.style.color = "#d32f2f" 
-    resposta.innerHTML = "❌ E-mail ou senha inválidos."
+    resposta.style.color = "#d32f2f"
+    resposta.innerHTML = "❌ E-mail ou CPF inválidos."
   }
 }
 
