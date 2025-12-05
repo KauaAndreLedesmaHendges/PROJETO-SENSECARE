@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+  <title>Perfil - Enfermeiro</title>
+  <style>
+    .perfil-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    .perfil-card {
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe082 100%);
+      border: 2px solid #ff9800;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+    }
+    .perfil-name {
+      font-size: 2rem;
+      color: #ff6f00;
+      margin: 20px 0;
+    }
+    .perfil-info {
+      text-align: left;
+      margin: 20px 0;
+    }
+    .perfil-info p {
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="perfil-container">
+    <img id="logo-sensecare" src="logo-sensecare.png" alt="SenseCare Logo" />
+    <div class="perfil-card">
+      <h1 id="perfil-titulo">Perfil do Enfermeiro</h1>
+      <h2 class="perfil-name" id="perfil-nome">Bem-vindo!</h2>
+      <div class="perfil-info" id="perfil-dados"></div>
+      <button class="logout-btn" onclick="fazerLogoutEnfermeiro()" style="background: #d32f2f !important; margin-top: 20px;">Sair</button>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+      if (!usuarioLogado || usuarioLogado.tipo !== "enfermeiro") {
+        window.location.href = "index.html"
+        return
+      }
+
+      document.getElementById("perfil-nome").textContent = usuarioLogado.nome
+      document.getElementById("perfil-dados").innerHTML = `
+        <p><strong>Status:</strong> Logado como Enfermeiro</p>
+        <p><strong>Acesso ao sistema:</strong> Completo</p>
+      `
+    }
+
+    function fazerLogoutEnfermeiro() {
+      localStorage.removeItem("usuarioLogado")
+      window.location.href = "index.html"
+    }
+  </script>
+</body>
+</html>

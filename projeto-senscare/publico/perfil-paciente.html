@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+  <title>Perfil - Paciente</title>
+  <style>
+    .perfil-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    .perfil-card {
+      background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%);
+      border: 2px solid #3bce7c;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+    }
+    .perfil-name {
+      font-size: 2rem;
+      color: #2196f3;
+      margin: 20px 0;
+    }
+    .perfil-info {
+      text-align: left;
+      margin: 20px 0;
+    }
+    .perfil-info p {
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="perfil-container">
+    <img id="logo-sensecare" src="logo-sensecare.png" alt="SenseCare Logo" />
+    <div class="perfil-card">
+      <h1 id="perfil-titulo">Perfil do Paciente</h1>
+      <h2 class="perfil-name" id="perfil-nome">Bem-vindo!</h2>
+      <div class="perfil-info" id="perfil-dados"></div>
+      <button class="logout-btn" onclick="fazerLogoutPaciente()" style="background: #d32f2f !important; margin-top: 20px;">Sair</button>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+      if (!usuarioLogado || usuarioLogado.tipo !== "paciente") {
+        window.location.href = "index.html"
+        return
+      }
+
+      const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
+      const usuario = usuariosSalvos.find(u => u.nome === usuarioLogado.nome && u.tipo === "paciente")
+
+      if (usuario) {
+        document.getElementById("perfil-nome").textContent = usuario.nome
+        let dados = `
+          <p><strong>Sexo:</strong> ${usuario.sexo}</p>
+          <p><strong>Email:</strong> ${usuario.email}</p>
+          <p><strong>CPF:</strong> ${usuario.cpf}</p>
+          <p><strong>Deficiência:</strong> ${usuario.tipoDeficiencia}</p>
+        `
+        document.getElementById("perfil-dados").innerHTML = dados
+      }
+    }
+
+    function fazerLogoutPaciente() {
+      localStorage.removeItem("usuarioLogado")
+      window.location.href = "index.html"
+    }
+  </script>
+</body>
+</html>

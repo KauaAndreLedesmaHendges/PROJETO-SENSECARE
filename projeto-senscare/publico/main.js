@@ -26,7 +26,6 @@ function verificarIdade() {
   respostaIdade.innerHTML = dataNascimento ? `Você tem ${idade} anos.` : ""
   responsavelSection.style.display = idade > 0 && idade < 18 ? "block" : "none"
 
-  
   if (sexo === "feminino" && idade >= 10 && idade < 60) {
     gestanteSection.style.display = "block"
   } else {
@@ -52,7 +51,6 @@ function enviaFormulario() {
   const resultado = document.getElementById("resposta")
   const idade = calcularIdade(dataNascimento)
 
-  
   let infoGestante = null
   if (sexo === "feminino" && idade >= 10 && idade < 60) {
     const gestante = document.getElementById("gestante").value
@@ -127,7 +125,7 @@ function enviaFormulario() {
     defFinal = outraDeficiencia
   }
 
-  const novoUsuario = { nome, sexo, dataNascimento, email, cpf, responsavel, tipoDeficiencia: defFinal, infoGestante }
+  const novoUsuario = { nome, sexo, dataNascimento, email, cpf, responsavel, tipoDeficiencia: defFinal, infoGestante, tipo: "paciente" }
   const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
   if (usuariosSalvos.some(u => u.email === email)) {
     resultado.style.color = "#d32f2f"
@@ -136,9 +134,12 @@ function enviaFormulario() {
   }
   usuariosSalvos.push(novoUsuario)
   localStorage.setItem("usuarios", JSON.stringify(usuariosSalvos))
-  resultado.style.color = "#2e7d32"
-  resultado.innerHTML = "Cadastro efetuado com sucesso!"
-  mostrarInfoEnviada(novoUsuario)
+  
+  // Salva o usuário logado e redireciona
+  localStorage.setItem("usuarioLogado", JSON.stringify({ nome, tipo: "paciente" }))
+  setTimeout(() => {
+    window.location.href = "dashboard-paciente.html"
+  }, 1500)
 }
 
 function mostrarInfoEnviada(usuario) {
@@ -200,13 +201,50 @@ function fazerLogin() {
   const resposta = document.getElementById("resposta-login")
   const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
   const usuarioEncontrado = usuariosSalvos.find(user => user.email === email && user.cpf === cpf)
+  
   if (usuarioEncontrado) {
     resposta.style.color = "#2e7d32"
     resposta.innerHTML = `✅ Login efetuado com sucesso! Bem-vindo, ${usuarioEncontrado.nome}`
+    
+    // Salva o usuário logado e redireciona
+    localStorage.setItem("usuarioLogado", JSON.stringify({ nome: usuarioEncontrado.nome, tipo: usuarioEncontrado.tipo }))
+    setTimeout(() => {
+      if (usuarioEncontrado.tipo === "enfermeiro") {
+        window.location.href = "dashboard-enfermeiro.html"
+      } else {
+        window.location.href = "dashboard-paciente.html"
+      }
+    }, 1500)
   } else {
     resposta.style.color = "#d32f2f"
     resposta.innerHTML = "❌ E-mail ou CPF inválidos."
   }
+}
+
+function loginEnfermeiro() {
+      const email = document.getElementById("login-email-enf").value.trim()
+      const cpf = document.getElementById("login-cpf-enf").value.trim()
+      const resposta = document.getElementById("resposta-login-enf")
+      const enfermeirsosSalvos = JSON.parse(localStorage.getItem("enfermeiros")) || []
+      const enfermeiroEncontrado = enfermeirsosSalvos.find(enf => enf.email === email && enf.cpf === cpf)
+      
+      if (enfermeiroEncontrado) {
+        resposta.style.color = "#2e7d32"
+        resposta.innerHTML = `✅ Login realizado! Bem-vindo, ${enfermeiroEncontrado.nome}`
+        localStorage.setItem("usuarioLogado", JSON.stringify({ nome: enfermeiroEncontrado.nome + " " + enfermeiroEncontrado.sobrenome, tipo: "enfermeiro" }))
+        setTimeout(() => {
+          window.location.href = "perfil-enfermeiro.html"
+        }, 1500)
+      } else {
+        resposta.style.color = "#d32f2f"
+        resposta.innerHTML = "❌ E-mail ou CPF inválidos."
+      }
+    }
+
+function IFouPC() {
+  document.getElementById("IFouPC").style.display = "none"
+  document.getElementById("cadastro-section").style.display = "block"
+  document.getElementById("login-section").style.display = "block"
 }
 
 function mostrarLogin() {
@@ -218,3 +256,86 @@ function mostrarCadastro() {
   document.getElementById("login-section").style.display = "none"
   document.getElementById("cadastro-section").style.display = "block"
 }
+
+function mostrarCadastroEnfermeiro() {
+  document.getElementById("enfermeiro-menu").style.display = "none"
+  document.getElementById("cadastro-enfermeiro").style.display = "block"
+  document.getElementById("login-enfermeiro").style.display = "none"
+}
+
+function mostrarLoginEnfermeiro() {
+  document.getElementById("enfermeiro-menu").style.display = "none"
+  document.getElementById("cadastro-enfermeiro").style.display = "none"
+  document.getElementById("login-enfermeiro").style.display = "block"
+}
+
+function voltarMenu() {
+  document.getElementById("IFouPC").style.display = "block"
+  document.getElementById("login-enfermeiro-section").style.display = "none"
+}
+
+function voltarMenuEnfermeiro() {
+  document.getElementById("enfermeiro-menu").style.display = "block"
+  document.getElementById("cadastro-enfermeiro").style.display = "none"
+  document.getElementById("login-enfermeiro").style.display = "none"
+}
+
+function cadastrarEnfermeiro() {
+  const nome = document.getElementById("nome-enf").value.trim()
+  const sobrenome = document.getElementById("sobrenome-enf").value.trim()
+  const sexo = document.getElementById("sexo-enf").value
+  const cpf = document.getElementById("cpf-enf").value.trim()
+  const cargo = document.getElementById("cargo-enf").value.trim()
+  const departamento = document.getElementById("departamento-enf").value.trim()
+  const salario = parseFloat(document.getElementById("salario-enf").value)
+  const dataContratacao = document.getElementById("data-contratacao-enf").value
+  const cidade = document.getElementById("cidade-enf").value.trim()
+  const hospital = document.getElementById("hospital-enf").value.trim()
+  const email = document.getElementById("email-enf").value.trim()
+  const resultado = document.getElementById("resposta-cadastro-enf")
+
+  if (!nome || !sobrenome || !sexo || !cpf || !cargo || !departamento || !salario || !dataContratacao || !cidade || !hospital || !email) {
+    resultado.style.color = "#d32f2f"
+    resultado.innerHTML = "Preencha todos os campos obrigatórios!"
+    return
+  }
+
+  if (cpf.length !== 11) {
+    resultado.style.color = "#d32f2f"
+    resultado.innerHTML = "CPF deve ter 11 dígitos."
+    return
+  }
+
+  if (!email.includes("@") || !email.includes(".")) {
+    resultado.style.color = "#d32f2f"
+    resultado.innerHTML = "E-mail inválido."
+    return
+  }
+
+  const enfermeirsosSalvos = JSON.parse(localStorage.getItem("enfermeiros")) || []
+  
+  if (enfermeirsosSalvos.some(enf => enf.email === email)) {
+    resultado.style.color = "#d32f2f"
+    resultado.innerHTML = "E-mail já cadastrado."
+    return
+  }
+
+  const novoEnfermeiro = { nome, sobrenome, sexo, cpf, cargo, departamento, salario, dataContratacao, cidade, hospital, email }
+  enfermeirsosSalvos.push(novoEnfermeiro)
+  localStorage.setItem("enfermeiros", JSON.stringify(enfermeirsosSalvos))
+  localStorage.setItem("usuarioLogado", JSON.stringify({ nome: nome + " " + sobrenome, tipo: "enfermeiro" }))
+  
+  resultado.style.color = "#2e7d32"
+  resultado.innerHTML = "✅ Cadastro realizado com sucesso!"
+  
+  setTimeout(() => {
+    window.location.href = "perfil-enfermeiro.html"
+  }, 1500)
+}
+
+function escolherEnfermeiro() {
+      document.querySelector(".welcome-container").style.display = "none"
+      document.getElementById("paciente-section").style.display = "none"
+      document.getElementById("enfermeiro-menu").style.display = "block"
+      document.getElementById("enfermeiro-section").style.display = "block"
+    }

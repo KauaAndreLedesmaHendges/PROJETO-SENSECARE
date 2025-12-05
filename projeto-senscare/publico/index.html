@@ -4,118 +4,537 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="style.css" />
-  <title>Cadastro e Login</title>
+  <title>SenseCare - Bem-vindo</title>
+  <style>
+    .welcome-container {
+      text-align: center;
+      padding: 60px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .welcome-title {
+      font-size: 2.5rem;
+      color: #2196f3;
+      margin: 20px 0;
+      font-weight: 700;
+    }
+    .welcome-subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 40px;
+    }
+    .choice-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .choice-btn {
+      padding: 16px 40px !important;
+      font-size: 1.1rem !important;
+      width: auto !important;
+      min-width: 200px;
+    }
+  </style>
 </head>
 <body>
-  <img id="logo-sensecare" src="logo-sensecare.png" alt="SenseCare Logo" />
+  <div class="welcome-container">
+    <img id="logo-sensecare" src="logo-sensecare.png" alt="SenseCare Logo" />
+    <h1 class="welcome-title">Bem-vindo ao SenseCare</h1>
+    <p class="welcome-subtitle">Cuide da sua saúde com facilidade e segurança.</p>
+    
+    <div class="choice-buttons">
+      <button class="choice-btn" onclick="escolherPaciente()">Sou Paciente / Cuidador</button>
+      <button class="choice-btn" onclick="escolherEnfermeiro()">Sou Enfermeiro</button>
+    </div>
+  </div>
 
-  <div id="cadastro-section">
-    <h1>Cadastre-se</h1>
-    <div class="div-main">
-      <label for="nome">Nome</label>
-      <input id="nome" type="text" />
+  <!-- LOGIN/CADASTRO PACIENTE -->
+  <div id="paciente-section" style="display: none;">
+    <div id="paciente-menu">
+      <button onclick="voltarInicio()">← Voltar</button>
+      <h1>Acesso - Paciente</h1>
+      <button onclick="mostrarCadastroPaciente()">Novo Cadastro</button>
+      <button onclick="mostrarLoginPaciente()">Login</button>
     </div>
-    <div class="div-main">
-      <label for="sexo">Sexo</label>
-      <select id="sexo" onchange="verificarIdade()">
-        <option value="">Selecione</option>
-        <option value="feminino">Feminino</option>
-        <option value="masculino">Masculino</option>
-        <option value="outro">Outro</option>
-      </select>
-    </div>
-    <div class="div-main">
-      <label for="data-nascimento">Data de nascimento</label>
-      <input id="data-nascimento" type="date" onchange="verificarIdade()" />
-      <div id="resposta-idade"></div>
-    </div>
-    <div id="gestante-section" style="display:none;">
-      <h3>Informações de Gestante</h3>
+
+    <!-- CADASTRO PACIENTE -->
+    <div id="cadastro-paciente" style="display: none;">
+      <button onclick="voltarMenuPaciente()">← Voltar</button>
+      <h1>Cadastre-se</h1>
       <div class="div-main">
-        <label for="gestante">É gestante?</label>
-        <select id="gestante" onchange="mostrarInfoGestante()">
+        <label for="nome-pac">Nome</label>
+        <input id="nome-pac" type="text" />
+      </div>
+      <div class="div-main">
+        <label for="sexo-pac">Sexo</label>
+        <select id="sexo-pac" onchange="verificarIdadePaciente()">
           <option value="">Selecione</option>
-          <option value="sim">Sim</option>
-          <option value="nao">Não</option>
+          <option value="feminino">Feminino</option>
+          <option value="masculino">Masculino</option>
+          <option value="outro">Outro</option>
         </select>
       </div>
-      <div id="info-gestante" style="display:none;">
+      <div class="div-main">
+        <label for="data-nascimento-pac">Data de nascimento</label>
+        <input id="data-nascimento-pac" type="date" onchange="verificarIdadePaciente()" />
+        <div id="resposta-idade-pac"></div>
+      </div>
+      <div id="gestante-section-pac" style="display:none;">
+        <h3>Informações de Gestante</h3>
         <div class="div-main">
-          <label for="meses-gestacao">Meses de gestação</label>
-          <input id="meses-gestacao" type="number" min="1" max="12" />
-        </div>
-        <div class="div-main">
-          <label for="acompanhamento-medico">Está em acompanhamento médico?</label>
-          <select id="acompanhamento-medico">
+          <label for="gestante-pac">É gestante?</label>
+          <select id="gestante-pac" onchange="mostrarInfoGestantePaciente()">
             <option value="">Selecione</option>
             <option value="sim">Sim</option>
             <option value="nao">Não</option>
           </select>
         </div>
+        <div id="info-gestante-pac" style="display:none;">
+          <div class="div-main">
+            <label for="meses-gestacao-pac">Meses de gestação</label>
+            <input id="meses-gestacao-pac" type="number" min="1" max="12" />
+          </div>
+          <div class="div-main">
+            <label for="acompanhamento-medico-pac">Está em acompanhamento médico?</label>
+            <select id="acompanhamento-medico-pac">
+              <option value="">Selecione</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
-    <div id="responsavel-section" style="display:none;">
-      <h3>Dados do Responsável</h3>
+      <div id="responsavel-section-pac" style="display:none;">
+        <h3>Dados do Responsável</h3>
+        <div class="div-main">
+          <label for="nome-responsavel-pac">Nome do responsável</label>
+          <input id="nome-responsavel-pac" type="text" />
+        </div>
+        <div class="div-main">
+          <label for="idade-responsavel-pac">Idade do responsável</label>
+          <input id="idade-responsavel-pac" type="number" min="18" />
+        </div>
+        <div class="div-main">
+          <label for="cpf-responsavel-pac">CPF do responsável</label>
+          <input id="cpf-responsavel-pac" type="text" maxlength="11" />
+        </div>
+        <div class="div-main">
+          <label for="email-responsavel-pac">E-mail do responsável</label>
+          <input id="email-responsavel-pac" type="email" />
+        </div>
+      </div>
       <div class="div-main">
-        <label for="nome-responsavel">Nome do responsável</label>
-        <input id="nome-responsavel" type="text" />
+        <label for="email-pac">E-mail</label>
+        <input id="email-pac" type="email" />
       </div>
       <div class="div-main">
-        <label for="idade-responsavel">Idade do responsável</label>
-        <input id="idade-responsavel" type="number" min="18" />
+        <label for="cpf-pac">CPF</label>
+        <input id="cpf-pac" type="text" maxlength="11" />
       </div>
       <div class="div-main">
-        <label for="cpf-responsavel">CPF do responsável</label>
-        <input id="cpf-responsavel" type="text" maxlength="11" />
+        <label for="deficiencia-pac">Possui algum tipo de deficiência?</label>
+        <select id="deficiencia-pac" onchange="mostrarOutraDeficienciaPaciente()">
+          <option value="">Selecione</option>
+          <option value="nenhuma">Nenhuma</option>
+          <option value="visual">Visual</option>
+          <option value="auditiva">Auditiva</option>
+          <option value="fisica">Física</option>
+          <option value="intelectual">Intelectual</option>
+          <option value="multipla">Múltipla</option>
+          <option value="outra">Outra</option>
+        </select>
+        <input type="text" id="outra-deficiencia-pac" placeholder="Especifique outra deficiência" style="display:none;" />
+      </div>
+      <button onclick="cadastrarPaciente()">Cadastrar</button>
+      <div id="resposta-cadastro-pac"></div>
+    </div>
+
+    <!-- LOGIN PACIENTE -->
+    <div id="login-paciente" style="display: none;">
+      <button onclick="voltarMenuPaciente()">← Voltar</button>
+      <h1>Login - Paciente</h1>
+      <div class="div-main">
+        <label for="login-email-pac">E-mail</label>
+        <input id="login-email-pac" type="email" />
       </div>
       <div class="div-main">
-        <label for="email-responsavel">E-mail do responsável</label>
-        <input id="email-responsavel" type="email" />
+        <label for="login-cpf-pac">CPF</label>
+        <input id="login-cpf-pac" type="text" maxlength="11" />
       </div>
+      <button onclick="loginPaciente()">Entrar</button>
+      <div id="resposta-login-pac"></div>
     </div>
-    <div class="div-main">
-      <label for="email">E-mail</label>
-      <input id="email" type="email" />
-    </div>
-    <div class="div-main">
-      <label for="cpf">CPF</label>
-      <input id="cpf" type="text" maxlength="11" />
-    </div>
-   
-    <div class="div-main">
-      <label for="deficiencia">Possui algum tipo de deficiência?</label>
-      <select id="deficiencia" onchange="mostrarOutraDeficiencia()">
-        <option value="">Selecione</option>
-        <option value="nenhuma">Nenhuma</option>
-        <option value="visual">Visual</option>
-        <option value="auditiva">Auditiva</option>
-        <option value="fisica">Física</option>
-        <option value="intelectual">Intelectual</option>
-        <option value="multipla">Múltipla</option>
-        <option value="outra">Outra</option>
-      </select>
-      <input type="text" id="outra-deficiencia" placeholder="Especifique outra deficiência" style="display:none;" />
-    </div>
-    <button onclick="enviaFormulario()">Cadastrar</button>
-    <div id="resposta"></div>
-    <p>Já tem conta? <a href="#" onclick="mostrarLogin()">Faça login</a></p>
   </div>
-  <div id="login-section" style="display: none;">
-    <h1>Login</h1>
-    <div class="div-main">
-      <label for="login-email">E-mail</label>
-      <input id="login-email" type="email" />
+
+  <!-- LOGIN/CADASTRO ENFERMEIRO -->
+  <div id="enfermeiro-section" style="display: none;">
+    <div id="enfermeiro-menu">
+      <button onclick="voltarInicio()">← Voltar</button>
+      <h1>Acesso - Enfermeiro</h1>
+      <button onclick="mostrarCadastroEnfermeiro()">Novo Cadastro</button>
+      <button onclick="mostrarLoginEnfermeiro()">Login</button>
     </div>
-    <div class="div-main">
-      <label for="login-cpf">CPF</label>
-      <input id="login-cpf" type="text" maxlength="11" />
+
+    <!-- CADASTRO ENFERMEIRO -->
+    <div id="cadastro-enfermeiro" style="display: none;">
+      <button onclick="voltarMenuEnfermeiro()">← Voltar</button>
+      <h1>Cadastro - Enfermeiro</h1>
+      <div class="div-main">
+        <label for="nome-enf">Nome</label>
+        <input id="nome-enf" type="text" />
+      </div>
+      <div class="div-main">
+        <label for="sobrenome-enf">Sobrenome</label>
+        <input id="sobrenome-enf" type="text" />
+      </div>
+      <div class="div-main">
+        <label for="sexo-enf">Sexo</label>
+        <select id="sexo-enf">
+          <option value="">Selecione</option>
+          <option value="masculino">Masculino</option>
+          <option value="feminino">Feminino</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+      <div class="div-main">
+        <label for="cpf-enf">CPF</label>
+        <input id="cpf-enf" type="text" maxlength="11" />
+      </div>
+      <div class="div-main">
+        <label for="cargo-enf">Cargo</label>
+        <input id="cargo-enf" type="text" />
+      </div>
+      <div class="div-main">
+        <label for="departamento-enf">Departamento</label>
+        <input id="departamento-enf" type="text" />
+      </div>
+      <div class="div-main">
+        <label for="salario-enf">Salário</label>
+        <input id="salario-enf" type="number" step="0.01" />
+      </div>
+      <div class="div-main">
+        <label for="data-contratacao-enf">Data de Contratação</label>
+        <input id="data-contratacao-enf" type="date" />
+      </div>
+      <div class="div-main">
+        <label for="cidade-enf">Cidade</label>
+        <input id="cidade-enf" type="text" />
+      </div>
+      <div class="div-main">
+        <label for="hospital-enf">Hospital</label>
+        <input id="hospital-enf" type="text" />
+      </div>
+      <div class="div-main">
+        <label for="email-enf">E-mail</label>
+        <input id="email-enf" type="email" />
+      </div>
+      <button onclick="cadastrarEnfermeiro()">Cadastrar</button>
+      <div id="resposta-cadastro-enf"></div>
     </div>
-    <button onclick="fazerLogin()">Entrar</button>
-    <div id="resposta-login"></div>
-    <p>Não tem conta? <a href="#" onclick="mostrarCadastro()">Cadastre-se</a></p>
+
+    <!-- LOGIN ENFERMEIRO -->
+    <div id="login-enfermeiro" style="display: none;">
+      <button onclick="voltarMenuEnfermeiro()">← Voltar</button>
+      <h1>Login - Enfermeiro</h1>
+      <div class="div-main">
+        <label for="login-email-enf">E-mail</label>
+        <input id="login-email-enf" type="email" />
+      </div>
+      <div class="div-main">
+        <label for="login-cpf-enf">CPF</label>
+        <input id="login-cpf-enf" type="text" maxlength="11" />
+      </div>
+      <button onclick="loginEnfermeiro()">Entrar</button>
+      <div id="resposta-login-enf"></div>
+    </div>
   </div>
-  <button>Historicos</button>
-  <div id="info-enviada" style="margin-top:30px;"></div>
-  <script src="main.js"></script>
+
+  <script>
+    function calcularIdade(dataNascimento) {
+      if (!dataNascimento) return 0
+      const nascimento = new Date(dataNascimento)
+      const hoje = new Date()
+      let idade = hoje.getFullYear() - nascimento.getFullYear()
+      const mes = hoje.getMonth() - nascimento.getMonth()
+      if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--
+      }
+      return idade
+    }
+
+    function escolherPaciente() {
+      document.getElementById("paciente-menu").style.display = "block"
+      document.querySelector(".welcome-container").style.display = "none"
+      document.getElementById("enfermeiro-section").style.display = "none"
+      document.getElementById("paciente-section").style.display = "block"
+    }
+
+    function escolherEnfermeiro() {
+      document.querySelector(".welcome-container").style.display = "none"
+      document.getElementById("paciente-section").style.display = "none"
+      document.getElementById("enfermeiro-section").style.display = "block"
+    }
+
+    function voltarInicio() {
+      document.querySelector(".welcome-container").style.display = "flex"
+      document.getElementById("paciente-section").style.display = "none"
+      document.getElementById("enfermeiro-section").style.display = "none"
+      document.getElementById("paciente-menu").style.display = "none"
+    }
+
+    function voltarMenuPaciente() {
+      document.getElementById("paciente-menu").style.display = "block"
+      document.getElementById("cadastro-paciente").style.display = "none"
+      document.getElementById("login-paciente").style.display = "none"
+    }
+
+    function mostrarCadastroPaciente() {
+      document.getElementById("paciente-menu").style.display = "none"
+      document.getElementById("cadastro-paciente").style.display = "block"
+      document.getElementById("login-paciente").style.display = "none"
+    }
+
+    function mostrarLoginPaciente() {
+      document.getElementById("paciente-menu").style.display = "none"
+      document.getElementById("cadastro-paciente").style.display = "none"
+      document.getElementById("login-paciente").style.display = "block"
+    }
+
+    function verificarIdadePaciente() {
+      const dataNascimento = document.getElementById("data-nascimento-pac").value
+      const sexo = document.getElementById("sexo-pac").value
+      const respostaIdade = document.getElementById("resposta-idade-pac")
+      const responsavelSection = document.getElementById("responsavel-section-pac")
+      const gestanteSection = document.getElementById("gestante-section-pac")
+      const idade = calcularIdade(dataNascimento)
+      respostaIdade.innerHTML = dataNascimento ? `Você tem ${idade} anos.` : ""
+      responsavelSection.style.display = idade > 0 && idade < 18 ? "block" : "none"
+
+      if (sexo === "feminino" && idade >= 10 && idade < 60) {
+        gestanteSection.style.display = "block"
+      } else {
+        gestanteSection.style.display = "none"
+        document.getElementById("gestante-pac").value = ""
+        document.getElementById("info-gestante-pac").style.display = "none"
+      }
+    }
+
+    function mostrarInfoGestantePaciente() {
+      const gestante = document.getElementById("gestante-pac").value
+      document.getElementById("info-gestante-pac").style.display = gestante === "sim" ? "block" : "none"
+    }
+
+    function mostrarOutraDeficienciaPaciente() {
+      const select = document.getElementById("deficiencia-pac")
+      const outra = document.getElementById("outra-deficiencia-pac")
+      outra.style.display = select.value === "outra" ? "block" : "none"
+    }
+
+    function cadastrarPaciente() {
+      const nome = document.getElementById("nome-pac").value.trim()
+      const sexo = document.getElementById("sexo-pac").value
+      const dataNascimento = document.getElementById("data-nascimento-pac").value
+      const email = document.getElementById("email-pac").value.trim()
+      const cpf = document.getElementById("cpf-pac").value.trim()
+      const tipoDeficiencia = document.getElementById("deficiencia-pac").value
+      const outraDeficiencia = document.getElementById("outra-deficiencia-pac").value.trim()
+      const resultado = document.getElementById("resposta-cadastro-pac")
+      const idade = calcularIdade(dataNascimento)
+
+      if (!nome || !sexo || !dataNascimento || !email || !cpf || !tipoDeficiencia) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "Preencha todos os campos obrigatórios!"
+        return
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "E-mail inválido."
+        return
+      }
+
+      if (cpf.length !== 11) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "CPF deve ter 11 dígitos."
+        return
+      }
+
+      let infoGestante = null
+      if (sexo === "feminino" && idade >= 10 && idade < 60) {
+        const gestante = document.getElementById("gestante-pac").value
+        if (gestante === "sim") {
+          const mesesGestacao = document.getElementById("meses-gestacao-pac").value
+          const acompanhamentoMedico = document.getElementById("acompanhamento-medico-pac").value
+          if (!mesesGestacao || !acompanhamentoMedico) {
+            resultado.style.color = "#d32f2f"
+            resultado.innerHTML = "Preencha todas as informações de gestante."
+            return
+          }
+          infoGestante = { gestante: true, mesesGestacao, acompanhamentoMedico }
+        } else if (gestante === "nao") {
+          infoGestante = { gestante: false }
+        }
+      }
+
+      let responsavel = null
+      if (idade < 18) {
+        const nomeResp = document.getElementById("nome-responsavel-pac").value.trim()
+        const idadeResp = parseInt(document.getElementById("idade-responsavel-pac").value)
+        const cpfResp = document.getElementById("cpf-responsavel-pac").value.trim()
+        const emailResp = document.getElementById("email-responsavel-pac").value.trim()
+        if (!nomeResp || !idadeResp || idadeResp < 18 || !cpfResp || cpfResp.length !== 11 || !emailResp.includes("@")) {
+          resultado.style.color = "#d32f2f"
+          resultado.innerHTML = "Preencha corretamente os dados do responsável!"
+          return
+        }
+        responsavel = { nome: nomeResp, idade: idadeResp, cpf: cpfResp, email: emailResp }
+      }
+
+      let defFinal = tipoDeficiencia
+      if (tipoDeficiencia === "outra") {
+        if (!outraDeficiencia) {
+          resultado.style.color = "#d32f2f"
+          resultado.innerHTML = "Especifique a deficiência."
+          return
+        }
+        defFinal = outraDeficiencia
+      }
+
+      const novoUsuario = { nome, sexo, dataNascimento, email, cpf, responsavel, tipoDeficiencia: defFinal, infoGestante, tipo: "paciente" }
+      const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
+      
+      if (usuariosSalvos.some(u => u.email === email)) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "E-mail já cadastrado."
+        return
+      }
+
+      usuariosSalvos.push(novoUsuario)
+      localStorage.setItem("usuarios", JSON.stringify(usuariosSalvos))
+      localStorage.setItem("usuarioLogado", JSON.stringify({ nome, tipo: "paciente" }))
+      
+      resultado.style.color = "#2e7d32"
+      resultado.innerHTML = "✅ Cadastro realizado com sucesso!"
+      
+      setTimeout(() => {
+        window.location.href = "perfil-paciente.html"
+      }, 1500)
+    }
+
+    function loginPaciente() {
+      const email = document.getElementById("login-email-pac").value.trim()
+      const cpf = document.getElementById("login-cpf-pac").value.trim()
+      const resposta = document.getElementById("resposta-login-pac")
+      const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
+      const usuarioEncontrado = usuariosSalvos.find(user => user.email === email && user.cpf === cpf && user.tipo === "paciente")
+      
+      if (usuarioEncontrado) {
+        resposta.style.color = "#2e7d32"
+        resposta.innerHTML = `✅ Login realizado! Bem-vindo, ${usuarioEncontrado.nome}`
+        localStorage.setItem("usuarioLogado", JSON.stringify({ nome: usuarioEncontrado.nome, tipo: "paciente" }))
+        setTimeout(() => {
+          window.location.href = "perfil-paciente.html"
+        }, 1500)
+      } else {
+        resposta.style.color = "#d32f2f"
+        resposta.innerHTML = "❌ E-mail ou CPF inválidos."
+      }
+    }
+
+    function mostrarCadastroEnfermeiro() {
+      document.getElementById("enfermeiro-menu").style.display = "none"
+      document.getElementById("cadastro-enfermeiro").style.display = "block"
+      document.getElementById("login-enfermeiro").style.display = "none"
+    }
+
+    function mostrarLoginEnfermeiro() {
+      document.getElementById("enfermeiro-menu").style.display = "none"
+      document.getElementById("cadastro-enfermeiro").style.display = "none"
+      document.getElementById("login-enfermeiro").style.display = "block"
+    }
+
+    function voltarMenuEnfermeiro() {
+      document.getElementById("enfermeiro-menu").style.display = "block"
+      document.getElementById("cadastro-enfermeiro").style.display = "none"
+      document.getElementById("login-enfermeiro").style.display = "none"
+    }
+
+    function cadastrarEnfermeiro() {
+      const nome = document.getElementById("nome-enf").value.trim()
+      const sobrenome = document.getElementById("sobrenome-enf").value.trim()
+      const sexo = document.getElementById("sexo-enf").value
+      const cpf = document.getElementById("cpf-enf").value.trim()
+      const cargo = document.getElementById("cargo-enf").value.trim()
+      const departamento = document.getElementById("departamento-enf").value.trim()
+      const salario = document.getElementById("salario-enf").value.trim()
+      const dataContratacao = document.getElementById("data-contratacao-enf").value
+      const cidade = document.getElementById("cidade-enf").value.trim()
+      const hospital = document.getElementById("hospital-enf").value.trim()
+      const email = document.getElementById("email-enf").value.trim()
+      const resultado = document.getElementById("resposta-cadastro-enf")
+
+      if (!nome || !sobrenome || !sexo || !cpf || !cargo || !departamento || !salario || !dataContratacao || !cidade || !hospital || !email) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "Preencha todos os campos obrigatórios!"
+        return
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "E-mail inválido."
+        return
+      }
+
+      if (cpf.length !== 11) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "CPF deve ter 11 dígitos."
+        return
+      }
+
+      const novoEnfermeiro = { nome, sobrenome, sexo, cpf, cargo, departamento, salario, dataContratacao, cidade, hospital, email, tipo: "enfermeiro" }
+      const enfermeirsosSalvos = JSON.parse(localStorage.getItem("enfermeiros")) || []
+      
+      if (enfermeirsosSalvos.some(e => e.email === email)) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "E-mail já cadastrado."
+        return
+      }
+
+      enfermeirsosSalvos.push(novoEnfermeiro)
+      localStorage.setItem("enfermeiros", JSON.stringify(enfermeirsosSalvos))
+      localStorage.setItem("usuarioLogado", JSON.stringify({ nome, tipo: "enfermeiro" }))
+      
+      resultado.style.color = "#2e7d32"
+      resultado.innerHTML = "✅ Cadastro realizado com sucesso!"
+      
+      setTimeout(() => {
+        window.location.href = "perfil-enfermeiro.html"
+      }, 1500)
+    }
+
+    function loginEnfermeiro() {
+      const email = document.getElementById("login-email-enf").value.trim()
+      const cpf = document.getElementById("login-cpf-enf").value.trim()
+      const resposta = document.getElementById("resposta-login-enf")
+      const enfermeirsosSalvos = JSON.parse(localStorage.getItem("enfermeiros")) || []
+      const enfermeiroEncontrado = enfermeirsosSalvos.find(enf => enf.email === email && enf.cpf === cpf)
+      
+      if (enfermeiroEncontrado) {
+        resposta.style.color = "#2e7d32"
+        resposta.innerHTML = `✅ Login realizado! Bem-vindo, ${enfermeiroEncontrado.nome}`
+        localStorage.setItem("usuarioLogado", JSON.stringify({ nome: enfermeiroEncontrado.nome, tipo: "enfermeiro" }))
+        setTimeout(() => {
+          window.location.href = "perfil-enfermeiro.html"
+        }, 1500)
+      } else {
+        resposta.style.color = "#d32f2f"
+        resposta.innerHTML = "❌ E-mail ou CPF inválidos."
+      }
+    }
+  </script>
 </body>
 </html>
