@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+  <title>Dashboard - Paciente</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 100%);
+    }
+
+    .header {
+      background: #fff;
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #logo-header {
+      width: 60px;
+      height: auto;
+    }
+
+    .header-title {
+      color: #2196f3;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .search-bar {
+      flex: 1;
+      max-width: 300px;
+      padding: 10px 15px;
+      border: 2px solid #3bce7c;
+      border-radius: 20px;
+      font-size: 1rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logout-header {
+      background: #d32f2f !important;
+      padding: 8px 20px !important;
+      font-size: 0.9rem !important;
+      width: auto !important;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 12px 25px !important;
+      background: linear-gradient(90deg, #2196f3 60%, #43e97b 100%) !important;
+      border: none !important;
+      border-radius: 8px !important;
+      color: #fff !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      width: auto !important;
+      font-size: 1rem !important;
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(90deg, #43e97b 40%, #2196f3 100%) !important;
+      border: 2px solid #2196f3 !important;
+    }
+
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    .info-card {
+      background: #fff;
+      border: 2px solid #3bce7c;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .info-card h2 {
+      color: #2196f3;
+      margin-top: 0;
+      border-bottom: 2px solid #3bce7c;
+      padding-bottom: 15px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #1976d2;
+    }
+
+    .info-value {
+      color: #555;
+    }
+
+    .fila-card {
+      background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%);
+      border: 2px solid #3bce7c;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .posicao-fila {
+      font-size: 3rem;
+      color: #2196f3;
+      font-weight: 700;
+      margin: 20px 0;
+    }
+
+    .fila-texto {
+      font-size: 1.2rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <img id="logo-header" src="logo-sensecare.png" alt="SenseCare Logo" />
+      <h1 class="header-title">SenseCare</h1>
+    </div>
+    <input type="text" class="search-bar" placeholder="🔍 Pesquisar...">
+    <div class="header-right">
+      <button class="logout-header" onclick="fazerLogoutPaciente()">Sair</button>
+    </div>
+  </div>
+
+  <!-- CONTAINER PRINCIPAL -->
+  <div class="container">
+    <!-- BOTÕES DE NAVEGAÇÃO -->
+    <div class="nav-buttons">
+      <button class="nav-btn active" onclick="mostrarSecao('inicio')">Início</button>
+      <button class="nav-btn" onclick="mostrarSecao('fila')">Minha Posição na Fila</button>
+    </div>
+
+    <!-- SEÇÃO INÍCIO -->
+    <div id="inicio" class="content-section active">
+      <div class="info-card">
+        <h2>Minhas Informações</h2>
+        <div class="info-row">
+          <span class="info-label">Nome:</span>
+          <span class="info-value" id="info-nome">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email:</span>
+          <span class="info-value" id="info-email">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">CPF:</span>
+          <span class="info-value" id="info-cpf">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Sexo:</span>
+          <span class="info-value" id="info-sexo">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Deficiência:</span>
+          <span class="info-value" id="info-deficiencia">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO FILA -->
+    <div id="fila" class="content-section">
+      <div class="fila-card">
+        <h2 style="margin-top: 0; border: none; color: #2196f3;">Sua Posição na Fila</h2>
+        <div class="posicao-fila" id="numero-fila">-</div>
+        <div class="fila-texto">Você é o <span id="posicao-texto">-</span> na fila</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function mostrarSecao(secao) {
+      // Esconde todas as seções
+      document.querySelectorAll('.content-section').forEach(el => {
+        el.classList.remove('active')
+      })
+      
+      // Remove classe active de todos os botões
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active')
+      })
+      
+      // Mostra a seção selecionada
+      document.getElementById(secao).classList.add('active')
+      
+      // Marca o botão como ativo
+      event.target.classList.add('active')
+    }
+
+    window.onload = function() {
+      const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+      if (!usuarioLogado || usuarioLogado.tipo !== "paciente") {
+        window.location.href = "index.html"
+        return
+      }
+
+      const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios")) || []
+      const usuario = usuariosSalvos.find(u => u.nome === usuarioLogado.nome && u.tipo === "paciente")
+
+      if (usuario) {
+        // Preenche as informações
+        document.getElementById("info-nome").textContent = usuario.nome
+        document.getElementById("info-email").textContent = usuario.email
+        document.getElementById("info-cpf").textContent = usuario.cpf
+        document.getElementById("info-sexo").textContent = usuario.sexo
+        document.getElementById("info-deficiencia").textContent = usuario.tipoDeficiencia
+
+        // Calcula a posição na fila (simulado: sempre 1 por enquanto)
+        const posicaoFila = 1
+        document.getElementById("numero-fila").textContent = posicaoFila
+        document.getElementById("posicao-texto").textContent = posicaoFila === 1 ? "1º" : posicaoFila + "º"
+      }
+    }
+
+    function fazerLogoutPaciente() {
+      localStorage.removeItem("usuarioLogado")
+      window.location.href = "index.html"
+    }
+  </script>
+</body>
+</html>

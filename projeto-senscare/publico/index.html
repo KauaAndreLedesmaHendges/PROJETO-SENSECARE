@@ -421,7 +421,7 @@
       resultado.innerHTML = "✅ Cadastro realizado com sucesso!"
       
       setTimeout(() => {
-        window.location.href = "perfil-paciente.html"
+        window.location.href = "dashboard-paciente.html"
       }, 1500)
     }
 
@@ -437,7 +437,7 @@
         resposta.innerHTML = `✅ Login realizado! Bem-vindo, ${usuarioEncontrado.nome}`
         localStorage.setItem("usuarioLogado", JSON.stringify({ nome: usuarioEncontrado.nome, tipo: "paciente" }))
         setTimeout(() => {
-          window.location.href = "perfil-paciente.html"
+          window.location.href = "dashboard-paciente.html"
         }, 1500)
       } else {
         resposta.style.color = "#d32f2f"
@@ -470,7 +470,7 @@
       const cpf = document.getElementById("cpf-enf").value.trim()
       const cargo = document.getElementById("cargo-enf").value.trim()
       const departamento = document.getElementById("departamento-enf").value.trim()
-      const salario = document.getElementById("salario-enf").value.trim()
+      const salario = parseFloat(document.getElementById("salario-enf").value)
       const dataContratacao = document.getElementById("data-contratacao-enf").value
       const cidade = document.getElementById("cidade-enf").value.trim()
       const hospital = document.getElementById("hospital-enf").value.trim()
@@ -483,36 +483,36 @@
         return
       }
 
-      if (!email.includes("@") || !email.includes(".")) {
-        resultado.style.color = "#d32f2f"
-        resultado.innerHTML = "E-mail inválido."
-        return
-      }
-
       if (cpf.length !== 11) {
         resultado.style.color = "#d32f2f"
         resultado.innerHTML = "CPF deve ter 11 dígitos."
         return
       }
 
-      const novoEnfermeiro = { nome, sobrenome, sexo, cpf, cargo, departamento, salario, dataContratacao, cidade, hospital, email, tipo: "enfermeiro" }
+      if (!email.includes("@") || !email.includes(".")) {
+        resultado.style.color = "#d32f2f"
+        resultado.innerHTML = "E-mail inválido."
+        return
+      }
+
       const enfermeirsosSalvos = JSON.parse(localStorage.getItem("enfermeiros")) || []
       
-      if (enfermeirsosSalvos.some(e => e.email === email)) {
+      if (enfermeirsosSalvos.some(enf => enf.email === email)) {
         resultado.style.color = "#d32f2f"
         resultado.innerHTML = "E-mail já cadastrado."
         return
       }
 
+      const novoEnfermeiro = { nome, sobrenome, sexo, cpf, cargo, departamento, salario, dataContratacao, cidade, hospital, email }
       enfermeirsosSalvos.push(novoEnfermeiro)
       localStorage.setItem("enfermeiros", JSON.stringify(enfermeirsosSalvos))
-      localStorage.setItem("usuarioLogado", JSON.stringify({ nome, tipo: "enfermeiro" }))
+      localStorage.setItem("usuarioLogado", JSON.stringify({ nome: nome + " " + sobrenome, tipo: "enfermeiro" }))
       
       resultado.style.color = "#2e7d32"
       resultado.innerHTML = "✅ Cadastro realizado com sucesso!"
       
       setTimeout(() => {
-        window.location.href = "perfil-enfermeiro.html"
+        window.location.href = "dashboard-enfermeiro.html"
       }, 1500)
     }
 
@@ -526,9 +526,9 @@
       if (enfermeiroEncontrado) {
         resposta.style.color = "#2e7d32"
         resposta.innerHTML = `✅ Login realizado! Bem-vindo, ${enfermeiroEncontrado.nome}`
-        localStorage.setItem("usuarioLogado", JSON.stringify({ nome: enfermeiroEncontrado.nome, tipo: "enfermeiro" }))
+        localStorage.setItem("usuarioLogado", JSON.stringify({ nome: enfermeiroEncontrado.nome + " " + enfermeiroEncontrado.sobrenome, tipo: "enfermeiro" }))
         setTimeout(() => {
-          window.location.href = "perfil-enfermeiro.html"
+          window.location.href = "dashboard-enfermeiro.html"
         }, 1500)
       } else {
         resposta.style.color = "#d32f2f"
