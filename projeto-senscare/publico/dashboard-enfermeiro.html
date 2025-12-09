@@ -53,6 +53,27 @@
       gap: 15px;
     }
 
+    .status-btn {
+      padding: 8px 20px !important;
+      border: none !important;
+      border-radius: 20px !important;
+      font-weight: 600 !important;
+      width: auto !important;
+      cursor: pointer !important;
+      font-size: 0.9rem !important;
+      transition: all 0.3s !important;
+    }
+
+    .status-btn.online {
+      background: #4caf50 !important;
+      color: #fff !important;
+    }
+
+    .status-btn.offline {
+      background: #999 !important;
+      color: #fff !important;
+    }
+
     .logout-header {
       background: #d32f2f !important;
       padding: 8px 20px !important;
@@ -119,6 +140,7 @@
       justify-content: space-between;
       padding: 10px 0;
       border-bottom: 1px solid #eee;
+      align-items: center;
     }
 
     .info-row:last-child {
@@ -132,6 +154,9 @@
 
     .info-value {
       color: #555;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .enfermeiros-grid {
@@ -176,6 +201,15 @@
       border-radius: 50%;
       margin-right: 8px;
     }
+
+    .status-offline {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: #999;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
   </style>
 </head>
 <body>
@@ -187,6 +221,7 @@
     </div>
     <input type="text" class="search-bar" placeholder="🔍 Pesquisar...">
     <div class="header-right">
+      <button id="status-btn" class="status-btn online" onclick="alterarStatus()">🟢 Online</button>
       <button class="logout-header" onclick="fazerLogoutEnfermeiro()">Sair</button>
     </div>
   </div>
@@ -225,7 +260,10 @@
         </div>
         <div class="info-row">
           <span class="info-label">Status:</span>
-          <span class="info-value"><span class="status-online"></span>Online</span>
+          <span class="info-value">
+            <span id="status-indicator" class="status-online"></span>
+            <span id="status-texto">Online</span>
+          </span>
         </div>
       </div>
     </div>
@@ -238,6 +276,8 @@
   </div>
 
   <script>
+    let statusEnfermeiro = "online" // Status padrão
+
     function mostrarSecao(secao) {
       // Esconde todas as seções
       document.querySelectorAll('.content-section').forEach(el => {
@@ -256,12 +296,53 @@
       event.target.classList.add('active')
     }
 
+    function alterarStatus() {
+      const btn = document.getElementById("status-btn")
+      
+      if (statusEnfermeiro === "online") {
+        statusEnfermeiro = "offline"
+        btn.textContent = "🔴 Offline"
+        btn.classList.remove('online')
+        btn.classList.add('offline')
+        document.getElementById("status-indicator").classList.remove('status-online')
+        document.getElementById("status-indicator").classList.add('status-offline')
+        document.getElementById("status-texto").textContent = "Offline"
+      } else {
+        statusEnfermeiro = "online"
+        btn.textContent = "🟢 Online"
+        btn.classList.remove('offline')
+        btn.classList.add('online')
+        document.getElementById("status-indicator").classList.remove('status-offline')
+        document.getElementById("status-indicator").classList.add('status-online')
+        document.getElementById("status-texto").textContent = "Online"
+      }
+
+      // Salva o status no localStorage
+      const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
+      usuarioLogado.status = statusEnfermeiro
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado))
+
+      // Atualiza também nos enfermeiros salvos
+      const enfermeirsosSalvos = JSON.parse(localStorage.getItem("enfermeiros")) || []
+      const enfermeiroIndex = enfermeirsosSalvos.findIndex(enf => (enf.nome + " " + enf.sobrenome) === usuarioLogado.nome)
+      if (enfermeiroIndex !== -1) {
+        enfermeirsosSalvos[enfermeiroIndex].status = statusEnfermeiro
+        localStorage.setItem("enfermeiros", JSON.stringify(enfermeirsosSalvos))
+      }
+
+      carregarEnfermeiros() // Atualiza a lista
+    }
+
     window.onload = function() {
       const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"))
       if (!usuarioLogado || usuarioLogado.tipo !== "enfermeiro") {
         window.location.href = "index.html"
         return
       }
+
+      // Carrega o status do enfermeiro
+      statusEnfermeiro = usuarioLogado.status || "online"
+      atualizarBotaoStatus()
 
       const enfermeirsosSalvos = JSON.parse(localStorage.getItem("enfermeiros")) || []
       const enfermeiroAtual = enfermeirsosSalvos.find(enf => (enf.nome + " " + enf.sobrenome) === usuarioLogado.nome)
@@ -279,27 +360,52 @@
       carregarEnfermeiros()
     }
 
+    function atualizarBotaoStatus() {
+      const btn = document.getElementById("status-btn")
+      
+      if (statusEnfermeiro === "online") {
+        btn.textContent = "🟢 Online"
+        btn.classList.remove('offline')
+        btn.classList.add('online')
+        document.getElementById("status-indicator").classList.remove('status-offline')
+        document.getElementById("status-indicator").classList.add('status-online')
+        document.getElementById("status-texto").textContent = "Online"
+      } else {
+        btn.textContent = "🔴 Offline"
+        btn.classList.remove('online')
+        btn.classList.add('offline')
+        document.getElementById("status-indicator").classList.remove('status-online')
+        document.getElementById("status-indicator").classList.add('status-offline')
+        document.getElementById("status-texto").textContent = "Offline"
+      }
+    }
+
     function carregarEnfermeiros() {
       const enfermeirsosSalvos = JSON.parse(localStorage.getItem("enfermeiros")) || []
       const grid = document.getElementById("enfermeiros-grid")
       
       if (enfermeirsosSalvos.length === 0) {
-        grid.innerHTML = "<p style='color: #666; grid-column: 1/-1; text-align: center;'>Nenhum enfermeiro trabalhando no momento.</p>"
+        grid.innerHTML = "<p style='color: #666; grid-column: 1/-1; text-align: center;'>Nenhum enfermeiro cadastrado.</p>"
         return
       }
 
-      grid.innerHTML = enfermeirsosSalvos.map(enf => `
-        <div class="enfermeiro-card">
-          <h3>${enf.nome} ${enf.sobrenome}</h3>
-          <span class="status-online"></span> Online
-          <div class="enfermeiro-info">
-            <p><strong>Cargo:</strong> ${enf.cargo}</p>
-            <p><strong>Departamento:</strong> ${enf.departamento}</p>
-            <p><strong>Hospital:</strong> ${enf.hospital}</p>
-            <p><strong>Cidade:</strong> ${enf.cidade}</p>
+      grid.innerHTML = enfermeirsosSalvos.map(enf => {
+        const isOnline = enf.status !== "offline"
+        const statusClass = isOnline ? "status-online" : "status-offline"
+        const statusTexto = isOnline ? "Online" : "Offline"
+        return `
+          <div class="enfermeiro-card">
+            <h3>${enf.nome} ${enf.sobrenome}</h3>
+            <span class="${statusClass}"></span> ${statusTexto}
+            <div class="enfermeiro-info">
+              <p><strong>Cargo:</strong> ${enf.cargo}</p>
+              <p><strong>Departamento:</strong> ${enf.departamento}</p>
+              <p><strong>Hospital:</strong> ${enf.hospital}</p>
+              <p><strong>Cidade:</strong> ${enf.cidade}</p>
+            </div>
           </div>
-        </div>
-      `).join("")
+        `
+      }).join("")
     }
 
     function fazerLogoutEnfermeiro() {
